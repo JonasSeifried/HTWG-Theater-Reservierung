@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block header %}
+    <h1 class="mb-5 mt-3" align="center">
+        {%block title %}
+            Htwg Theater Reservierung
+        {% endblock%}
+    </h1>
+{% endblock %}
+{% block content %}
+<div class="container-fluid" align="center">
+<div class="form-div">
+<form action="" class="form" method = "POST">
+    <div class="d-flex flex-column justify-content-center">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon2">Email</span>
+            <input name="email" type="text" class="form-control" placeholder="ma591mu@htwg-konstanz.de" aria-label="ma591mu@htwg-konstanz.de" aria-describedby="basic-addon2">
+        </div>
+        <div class="d-flex">
+            <select name="vorstellung" class="form-select me-1" aria-label="Vorstellung">
+              <option selected>Vorstellung</option>
+                {%for date in vorstellungen%}
+                    <option value="{{date}}">{{date}}</option>
+                {%endfor%}
+            </select>
+            <select name="anzahl" class="form-select ms-1" aria-label="Anzahl Personen">
+                <option selected>Anzahl Personen</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+
+        </div>
+        <button type="submit" class="btn btn-primary btn-submit">Reservieren!</button>
+        </div>
+</form>
+</div>
+</div>
+{% endblock %}

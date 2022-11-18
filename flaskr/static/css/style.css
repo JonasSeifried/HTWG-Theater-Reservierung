@@ -1,0 +1,22 @@
+.btn-submit, .btn-submit:after {
+    margin: 1rem 30%;
+    color: black;
+    background-color: limegreen;
+    border: none;
+}
+.btn-submit:hover, .btn-submit:focus{
+    background-color: green;
+}
+
+.btn-submit:active:focus{
+    background-color: darkgreen;
+}
+
+.form-div {
+    width: 100%;
+}
+
+.form {
+    max-width: 800px;
+    margin: 0 10rem;
+}
