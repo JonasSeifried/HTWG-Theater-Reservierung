@@ -11,7 +11,7 @@ def get_vorstellungen():
     vor_arr = []
     for item in vorstellungen:
         vor_arr.append(item)
-    return vor_arr
+    return parse_json(vor_arr)
 
 
 def store_reservierung(values):
