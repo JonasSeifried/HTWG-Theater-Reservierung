@@ -1,15 +1,23 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Log In{% endblock %}</h1>
+    <h1 class="mb-5 mt-3" align="center">
+        {%block title %}
+            Staff Login
+        {% endblock%}
+    </h1>
 {% endblock %}
 
 {% block content %}
   <form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <input type="submit" value="Log In">
+      <div class="d-flex flex-column justify-content-center" style="max-width: 600px;">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" required>
+        </div>
+      <div class="input-group mb-3">
+          <input type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" required>
+      </div>
+        <button type="submit" class="btn btn-primary btn-submit">login</button>
+    </div>
   </form>
 {% endblock %}
