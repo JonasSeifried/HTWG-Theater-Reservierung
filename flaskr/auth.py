@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from .database.query import add_user, get_user_by_name, get_user_by_id
 
-bp = Blueprint('auth', __name__, url_prefix='/auth')
+bp = Blueprint('auth', __name__)
 
 
 @bp.route('/register', methods=('GET', 'POST'))
@@ -32,6 +32,7 @@ def register():
     return render_template('auth/register.html')
 
 
+@bp.route("/auth/login", methods=('GET', 'POST'))
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
@@ -46,7 +47,6 @@ def login():
 
         if error is None:
             session.clear()
-            print(user)
             session['user_id'] = user['_id']["$oid"]
             return redirect(url_for('admin.admin_homepage'))
 

@@ -8,7 +8,7 @@ bp = Blueprint("admin", __name__, url_prefix="/admin")
 @bp.route("/")
 @login_required
 def admin_homepage():
-    return "wow"
+    return render_template("admin/admin_overview.html")
 
 @bp.route("/test")
 @login_required
