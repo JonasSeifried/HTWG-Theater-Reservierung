@@ -7,29 +7,25 @@
     </h1>
 {% endblock %}
 {% block content %}
-
 <div class="form-div">
 <form action="" class="form" method = "POST">
     <div class="d-flex flex-column justify-content-center">
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon2">Email</span>
-            <input name="email" type="text" class="form-control" placeholder="ma591mu@htwg-konstanz.de" aria-label="ma591mu@htwg-konstanz.de" aria-describedby="basic-addon2">
+        <div class="input-group mb-3" style="flex-wrap: nowrap">
+            <span class="input-group-text" id="basic-addon2">{{form.email.label}}</span>
+            {{form.email(class="form-control", placeholder="ma591mu@htwg-konstanz.de")}}
         </div>
-        <div class="d-flex">
-            <select name="vorstellung" class="form-select me-1" aria-label="Vorstellung">
-              <option selected>Vorstellung</option>
-                {%for date in vorstellungen%}
-                    <option value="{{date}}">{{date}}</option>
-                {%endfor%}
-            </select>
-            <select name="anzahl" class="form-select ms-1" aria-label="Anzahl Personen">
-                <option selected>Anzahl Personen</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-            </select>
-
+        <div class="d-flex justify-content-evenly">
+            {{form.vorstellung(class="form-select me-1")}}
+            <div class="input-group" style="flex-wrap: nowrap">
+                 <span class="input-group-text">Anzahl Personen</span>
+                {{form.anzahl(class="form-select me-1")}}
+            </div>
+            <div class="input-group" style="width: fit-content; flex-wrap: nowrap">
+                <span class="input-group-text">Ermäßigt</span>
+                <div class="input-group-text">
+                    {{form.ist_ermaessigt(class="form-check-input mt-0")}}
+                </div>
+            </div>
         </div>
         <button type="submit" class="btn btn-primary btn-submit">Reservieren!</button>
         </div>
