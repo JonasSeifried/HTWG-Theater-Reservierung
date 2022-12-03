@@ -10,7 +10,7 @@ def reservieren():
     vorstellungen = []
     vorstellungen_raw = get_vorstellungen()
     for item in vorstellungen_raw:
-        vorstellungen.append(item["name"] + " " + item["datum"]+ " " + item["uhrzeit"])
+        vorstellungen.append(item["name"] + " " + item["datum"] + " " + item["uhrzeit"])
 
     if request.method == "GET":
         return render_template("reservierung/reservierung.html", vorstellungen=vorstellungen)
