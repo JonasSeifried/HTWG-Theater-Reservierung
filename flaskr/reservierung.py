@@ -9,14 +9,17 @@ bp = Blueprint("reservierung", __name__)
 @bp.route('/', methods=["GET", "POST"])
 def reservieren():
     form = ReservierungsForm(request.form)
+
     if request.method == "POST" and form.validate():
-        # form_data = request.form  # Dict der form antworten
-        # store_reservierung(form_data)
+        email = form.email.data
+        print(email)
+        print(form.anzahl.data)
+        print(form.email.data)
         return "worked"
 
     vorstellungen = []
     vorstellungen_raw = get_vorstellungen()
     for item in vorstellungen_raw:
-        vorstellungen.append(item["name"] + " " + item["datum"] + " " + item["uhrzeit"])
+        form.vorstellung.choices.append(item["name"] + " " + item["datum"] + " " + item["uhrzeit"])
 
     return render_template("reservierung/reservierung.html", form=form, vorstellungen=vorstellungen)
