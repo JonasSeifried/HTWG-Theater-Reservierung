@@ -1,6 +1,5 @@
 import qrcode
 
-
 input_data = "https:lufobo.de"   #Creating an instance of qrcode
 qr = qrcode.QRCode(version=1, box_size=10, border=5)
 qr.add_data(input_data)

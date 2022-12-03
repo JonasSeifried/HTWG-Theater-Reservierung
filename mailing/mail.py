@@ -1,27 +1,31 @@
+import os
 import smtplib
-from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
-import ssl
+from email.mime.text import MIMEText
+
+print(os.getcwd())
 
 me = "hallo@lufobo.de"
 my_password = r""
-my_smtp = "smtp.lufobo.de"
-you = "hannes.brugger.007@gmail.coe"
-text = "Hallöle :)"
+you = "hannes.brugger.007@gmail.com"
 
+msg = MIMEMultipart()
+msg['Subject'] = "Alert"
+msg['From'] = me
+msg['To'] = you
 
-mail = MIMEText(text)
-mail['Subject'] = "Testchen"
-mail['From'] = "HTWG-Theater <hannes@lufobo.de>"
-mail['To'] = "hannes.brugger.007@gmail.com"
+html = '<html><body><p>Hi, I have the following alerts for you!</p></body></html>'
+text = MIMEText(html, 'html')
+msg.attach(text)
 
-sender = smtplib.SMTP(my_smtp, 587)
+# This example assumes the image is in the current directory
+fp = open('qrcode001.png', 'rb')
+msgImage = MIMEImage(fp.read())
+fp.close()
 
-context = ssl.SSLContext(ssl.PROTOCOL_TLS)
-sender.ehlo()
-sender.starttls(context=context)
-sender.ehlo()
-
-sender.login(me, my_password)
-sender.send_message(mail)
-sender.close()
+# Define the image's ID as referenced above
+msgImage.add_header('Content-ID', '<image1>')
+msg.attach(msgImage)#<img src="cid:image1"><br><br>
+msgText = MIMEText('<br><br><b>Some <i>HTML</i> text</b> and an image.Nifty!', 'html')
+msg.attach(msgText)
