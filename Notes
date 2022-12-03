@@ -1,0 +1,14 @@
+
+
+Packages for QR-Code
+
+pip install pillow
+pip install qrcode
+
+Source:
+
+Mail
+- https://www.youtube.com/watch?v=qYxH3WzaOmk
+
+QR-Code
+- https://towardsdatascience.com/generate-qrcode-with-python-in-5-lines-42eda283f325
