@@ -7,7 +7,6 @@ me = "hallo@lufobo.de"
 my_password = r""
 my_smtp = "smtp.lufobo.de"
 you = "hannes.brugger.007@gmail.coe"
-
 text = "Hallöle :)"
 
 
