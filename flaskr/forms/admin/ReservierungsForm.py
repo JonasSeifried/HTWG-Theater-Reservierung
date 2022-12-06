@@ -1,5 +1,14 @@
 from wtforms import Form, BooleanField, StringField, SelectField, validators
 
+from flaskr.database import query
+
+
+def get_vorstellungen():
+    vorstellungen = []
+    for item in query.get_vorstellungen():
+        vorstellungen.append((item["id"], item["name"] + " " + item["datum"] + " " + item["uhrzeit"]))
+    return vorstellungen
+
 
 class ReservierungsForm(Form):
     email = StringField('Email', [
@@ -7,9 +16,10 @@ class ReservierungsForm(Form):
         validators.DataRequired(),
     ])
     vorstellung = SelectField("Vorstellung", [
-        validators.DataRequired()],
-        choices=["Vorstellung", "testtest", "test3"])
+        validators.none_of(values=[0])],
+                              coerce=int,
+                              choices=[(0, "Vorstellung auswählen"), *get_vorstellungen()])
 
-    anzahl = SelectField("Anzahl", choices=[1, 2, 3, 4, 5, 6])
+    anzahl_personen = SelectField("Anzahl", choices=[1, 2, 3, 4, 5, 6])
 
-    ist_ermaessigt = BooleanField('Reservierung ermäßigt')
+    discount = BooleanField('Reservierung ermäßigt')

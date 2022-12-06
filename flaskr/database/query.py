@@ -1,38 +1,46 @@
 import json
+from datetime import datetime
+from pymongo import errors
 
 from bson import json_util
 from bson.objectid import ObjectId
 from .db import get_database
 
 
-def get_vorstellungen():
-    db = get_database()
-    vorstellungen = db["Vorstellungen"].find()
-    vor_arr = []
-    for item in vorstellungen:
-        vor_arr.append(item)
-    return parse_json(vor_arr)
-
-
-def store_reservierung(values):
-    db = get_database()
-    email = values.get("email")
-    datum, uhrzeit = values.get("vorstellung").split(" ")
-    anzahl = values.get("anzahl")
-    item = {
-        "email": email,
-        "datum": datum,
-        "uhrzeit": uhrzeit,
-        "anzahlPersonen": int(anzahl)
-    }
-    db["Reservierungen"].insert_one(item)
-
-
 def parse_json(data):
     return json.loads(json_util.dumps(data))
 
 
-# Admin Queries
+def add_reservierung(email: str, vorstellungs_id: int, anzahl_personen: int, discount) -> bool:
+    db = get_database()
+    item = {
+        "email": email,
+        "vorstellung": vorstellungs_id,
+        "anzahlPersonen": anzahl_personen
+    }
+    try:
+        db["Reservierungen"].insert_one(item)
+    except errors.DuplicateKeyError as e:
+        print(e)
+        return False
+    return True
+
+
+def add_vorstellung(v_id: int, name: str, date: datetime, verfuegbare_plaetze: int):
+    db = get_database()
+    item = {
+        "id": v_id,
+        "name": name,
+        "datum": date.strftime("%x"),
+        "uhrzeit": date.strftime("%X"),
+        "verfuegbarePlaetze": verfuegbare_plaetze
+    }
+    db["Vorstellungen"].insert_one(item)
+
+
+def get_vorstellungen():
+    db = get_database()
+    return parse_json(list(db["Vorstellungen"].find()))
 
 
 def get_user_by_name(username):
@@ -61,5 +69,4 @@ def add_user(username, password):
     }
     db["Mitarbeiter"].insert_one(item)
     return True
-
 

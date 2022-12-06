@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request
-from .database.query import store_reservierung, get_vorstellungen
+from .database import query
 from .forms.admin.ReservierungsForm import ReservierungsForm
+from .vorstellung import Vorstellung
 
 bp = Blueprint("reservierung", __name__)
 
@@ -9,14 +10,27 @@ bp = Blueprint("reservierung", __name__)
 @bp.route('/', methods=["GET", "POST"])
 def reservieren():
     form = ReservierungsForm(request.form)
-    if request.method == "POST" and form.validate():
-        # form_data = request.form  # Dict der form antworten
-        # store_reservierung(form_data)
-        return "worked"
+    if request.method == "POST":
+        if form.validate():
+            reservierung = Reservierung(form.email, form.vorstellung, form.anzahl_personen, form.discount)
+            print(form.vorstellung.data)
+            return "worked"
+        if form.vorstellung.data == 0:
+            return render_template("reservierung/reservierung.html", form=form, vorstellung_error=True)
+    return render_template("reservierung/reservierung.html", form=form)
 
-    vorstellungen = []
-    vorstellungen_raw = get_vorstellungen()
-    for item in vorstellungen_raw:
-        vorstellungen.append(item["name"] + " " + item["datum"] + " " + item["uhrzeit"])
 
-    return render_template("reservierung/reservierung.html", form=form, vorstellungen=vorstellungen)
+class Reservierung:
+    def __init__(self, email: str, vorstellungs_id: int, anzahl_personen: int, discount: bool):
+        self.email = email
+        self.vorstellungs_id = vorstellungs_id
+        self.anzahl_personen = anzahl_personen
+        self.discount = discount
+
+    def save(self):
+        if query.add_reservierung(self.email,
+                                  self.vorstellungs_id,
+                                  self.anzahl_personen,
+                                  self.discount):
+            return
+        print("Error")

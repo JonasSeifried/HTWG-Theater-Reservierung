@@ -18,12 +18,12 @@
             {{form.vorstellung(class="form-select me-1")}}
             <div class="input-group" style="flex-wrap: nowrap">
                  <span class="input-group-text">Anzahl Personen</span>
-                {{form.anzahl(class="form-select me-1")}}
+                {{form.anzahl_personen(class="form-select me-1")}}
             </div>
             <div class="input-group" style="width: fit-content; flex-wrap: nowrap">
                 <span class="input-group-text">Ermäßigt</span>
                 <div class="input-group-text">
-                    {{form.ist_ermaessigt(class="form-check-input mt-0")}}
+                    {{form.discount(class="form-check-input mt-0")}}
                 </div>
             </div>
         </div>
@@ -31,4 +31,11 @@
         </div>
 </form>
 </div>
+
+
+{% if vorstellung_error%}
+<p>Bitte wähle eine Vorstellung aus</p>
+{% endif %}
+
+
 {% endblock %}
