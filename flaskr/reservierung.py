@@ -12,8 +12,11 @@ def reservieren():
     form = ReservierungsForm(request.form)
     if request.method == "POST":
         if form.validate():
-            reservierung = Reservierung(form.email, form.vorstellung, form.anzahl_personen, form.discount)
-            print(form.vorstellung.data)
+            reservierung = Reservierung(form.email.data,
+                                        form.vorstellung.data,
+                                        form.anzahl_personen.data,
+                                        form.discount.data)
+            print(reservierung)
             return "worked"
         if form.vorstellung.data == 0:
             return render_template("reservierung/reservierung.html", form=form, vorstellung_error=True)
@@ -26,6 +29,15 @@ class Reservierung:
         self.vorstellungs_id = vorstellungs_id
         self.anzahl_personen = anzahl_personen
         self.discount = discount
+
+    def __str__(self):
+        return self.email\
+               + " v_ID " + str(self.vorstellungs_id)\
+               + " Personen " + str(self.anzahl_personen)\
+               + " discount " + str(self.discount)
+
+    def validate(self):
+
 
     def save(self):
         if query.add_reservierung(self.email,

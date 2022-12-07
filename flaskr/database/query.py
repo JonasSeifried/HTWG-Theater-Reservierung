@@ -25,6 +25,8 @@ def add_reservierung(email: str, vorstellungs_id: int, anzahl_personen: int, dis
         return False
     return True
 
+def get_reservierung_by_email(email: str):
+    db = get_database()
 
 def add_vorstellung(v_id: int, name: str, date: datetime, verfuegbare_plaetze: int):
     db = get_database()
