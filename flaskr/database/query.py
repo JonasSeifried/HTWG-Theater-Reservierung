@@ -11,7 +11,7 @@ def parse_json(data):
     return json.loads(json_util.dumps(data))
 
 
-def add_reservierung(email: str, vorstellungs_id: int, anzahl_personen: int, discount) -> bool:
+def add_reservierung(email: str, vorstellungs_id: int, anzahl_personen: int) -> bool:
     db = get_database()
     item = {
         "email": email,
@@ -25,8 +25,27 @@ def add_reservierung(email: str, vorstellungs_id: int, anzahl_personen: int, dis
         return False
     return True
 
+def add_verification_data(email: str, vorstellungs_id: int, anzahl_personen: int) -> bool:
+    db = get_database()
+    item = {
+        "email": email,
+        "vorstellung": vorstellungs_id,
+        "anzahlPersonen": anzahl_personen,
+        "day": datetime.day,
+
+    }
+    try:
+        db["Verification"].insert_one(item)
+    except errors.DuplicateKeyError as e:
+        print(e)
+        return False
+    return True
+
+
+
 def get_reservierung_by_email(email: str):
     db = get_database()
+
 
 def add_vorstellung(v_id: int, name: str, date: datetime, verfuegbare_plaetze: int):
     db = get_database()
@@ -71,4 +90,3 @@ def add_user(username, password):
     }
     db["Mitarbeiter"].insert_one(item)
     return True
-
