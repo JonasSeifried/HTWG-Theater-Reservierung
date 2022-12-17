@@ -11,7 +11,7 @@ from .database import db
 bp = Blueprint('auth', __name__)
 
 
-@bp.route('auth/register', methods=('GET', 'POST'))
+@bp.route('/auth/register', methods=('GET', 'POST'))
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':

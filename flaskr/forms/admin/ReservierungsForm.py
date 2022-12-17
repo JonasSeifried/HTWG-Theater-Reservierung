@@ -20,6 +20,8 @@ class ReservierungsForm(Form):
                               coerce=int,
                               choices=[(0, "Vorstellung auswählen"), *get_vorstellungen()])
 
-    anzahl_personen = SelectField("Anzahl", choices=[1, 2, 3, 4, 5, 6])
+    anzahl_personen = SelectField("Anzahl",
+                                  coerce=int,
+                                  choices=[1, 2, 3, 4, 5, 6])
 
     discount = BooleanField('Reservierung ermäßigt')
