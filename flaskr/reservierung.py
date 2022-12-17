@@ -1,7 +1,8 @@
+from datetime import datetime
+
 from flask import Blueprint, render_template, request, redirect, url_for
 from .database import db
 from .forms.admin.ReservierungsForm import ReservierungsForm
-from .vorstellung import Vorstellung
 
 bp = Blueprint("reservierung", __name__)
 
@@ -13,9 +14,10 @@ def reservieren():
     if request.method == "POST":
         if form.validate():
             reservierung = Reservierung(form.email.data, form.vorstellung.data, form.anzahl_personen.data)
-            # Todo Email schicken mit /verify?email=email&vorstellung=vorstellung&personen=anzahl_personen
-            print(reservierung)
-            return "worked"
+            if reservierung.start_verification():
+                # Todo Email schicken mit /verify?email=email&vorstellung=vorstellung&personen=anzahl_personen
+                return "worked email should be send now"
+            return "Something didnt work"
         if form.vorstellung.data == 0:
             return render_template("reservierung/reservierung.html", form=form, vorstellung_error=True)
     return render_template("reservierung/reservierung.html", form=form)
@@ -30,7 +32,9 @@ def reservierung_verify():
     except ValueError:
         return redirect(url_for("reservierung.reservieren"))
 
-    Reservierung(email, vorstellung, anzahl_personen)
+    reservierung = Reservierung(email, vorstellung, anzahl_personen)
+    if not reservierung.verify():
+        return "Etwas ist schiefgelaufen, vielleicht ist dein Bestätigungslink abgelaufen!"
 
     return f"email: {email}, vorstellung: {vorstellung}, personen: {anzahl_personen}"
 
@@ -44,9 +48,25 @@ class Reservierung:
     def __str__(self):
         return f"email: {self.email}, v_ID: {self.vorstellungs_id}, personen: {self.anzahl_personen}"
 
-    def verify(self):
-        # Todo verify (Daten erstmal in anderem Table speichern um email zu bestätigen)
-        return
+    def start_verification(self) -> bool:
+        item = self.to_dict()
+        item["tagAktiv"] = datetime.now().day
+        print(item)
+        if db.insert_one("Verifizierungen", item):
+            return True
+        return False
+
+    def verify(self) -> bool:
+        res_data = db.query("Verifizierungen", self.to_dict())
+        print(res_data)
+        if res_data is None:
+            return False
+        if res_data["tagAktiv"] != datetime.now().day:
+            return False
+        if self.save():
+            db.delete_one("Verifizierungen", self.to_dict())
+            return True
+        return False
 
     def save(self) -> bool:
 

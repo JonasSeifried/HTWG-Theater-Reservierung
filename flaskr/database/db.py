@@ -21,7 +21,7 @@ def query(table: str, search_filter: dict = None, *, only_first: bool = False) -
     then only it only returns first item found
 
 
-    :returns:
+    :return:
     found items as list of dictionaries | found item as dictionary | None if none found
     """
 
@@ -62,6 +62,19 @@ def insert_one(table: str, item: dict) -> bool:
         return False
 
     return True
+
+
+def delete_one(table: str, item: dict) -> bool:
+    """
+    Deletes one item in the given table
+
+    :return: True if successful, False if not
+    """
+
+    db = get_database()
+    if db[table].delete_one(item).deleted_count == 1:
+        return True
+    return False
 
 
 def parse_json(data):
