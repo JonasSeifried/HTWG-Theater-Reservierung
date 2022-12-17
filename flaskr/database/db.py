@@ -14,25 +14,37 @@ def get_database():
     return client['theater']
 
 
-def query(table: str, search_filter: dict, *, only_first: bool = False) -> dict | None:
+def query(table: str, search_filter: dict = None, *, only_first: bool = False) -> list | dict | None:
     """
-    Queries items from the given table with a given filter
+    Queries items from the given table with an optional filter
     If option query_only_first is True,
     then only it only returns first item found
 
 
     :returns:
-    a found dictionary or None if none found
+    found items as list of dictionaries | found item as dictionary | None if none found
     """
 
     db = get_database()
 
+    if search_filter is None:
+        if only_first:
+            data = db[table].find_one()
+            return parse_json(data) if data is not None else None
+        data = db[table].find()
+        if data is None:
+            return None
+        data = parse_json(data)
+        return data[0] if len(data) == 1 else data
+
     if only_first:
         data = db[table].find_one(search_filter)
         return parse_json(data) if data is not None else None
-
     data = db[table].find(search_filter)
-    return parse_json(data) if data is not None else None
+    if data is None:
+        return None
+    data = parse_json(data)
+    return data[0] if len(data) == 1 else data
 
 
 def insert_one(table: str, item: dict) -> bool:
@@ -58,4 +70,4 @@ def parse_json(data):
 
 # Testing
 if __name__ == '__main__':
-    print(query("Vorstellungen", {"name": "Das Ende kommt"}, only_first=True))
+    print(query("Mitarbeiter", only_first=True))

@@ -5,11 +5,13 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .database.query import add_user, get_user_by_name, get_user_by_id
+from bson.objectid import ObjectId
+from .database import db
 
 bp = Blueprint('auth', __name__)
 
 
+@bp.route('auth/register', methods=('GET', 'POST'))
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
@@ -39,7 +41,8 @@ def login():
         username = request.form['username']
         password = request.form['password']
         error = None
-        user = get_user_by_name(username)
+        user = db.query("Mitarbeiter", {"username": username})
+        print(user)
         if user is None:
             error = 'Incorrect username.'
         elif not check_password_hash(user['password'], password):
@@ -48,7 +51,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['_id']["$oid"]
-            return redirect(url_for('admin.admin_homepage'))
+            return redirect(url_for('admin.admin_overview'))
 
         flash(error)
 
@@ -61,9 +64,10 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = get_user_by_id(user_id)
+        g.user = db.query("Mitarbeiter", {"_id": ObjectId(user_id)})
 
 
+@bp.route("/auth/logout")
 @bp.route('/logout')
 def logout():
     session.clear()
@@ -79,3 +83,14 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
+
+
+def add_user(username: str, password: str):
+    if db.query("Mitarbeiter", {"username": username}):
+        return False
+    item = {
+        "username": username,
+        "password": password
+    }
+    return db.insert_one("Mitarbeiter", item)
+

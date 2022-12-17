@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from .database import query
 from .database import db
 from .forms.admin.ReservierungsForm import ReservierungsForm
 from .vorstellung import Vorstellung
@@ -46,10 +45,8 @@ class Reservierung:
         return f"email: {self.email}, v_ID: {self.vorstellungs_id}, personen: {self.anzahl_personen}"
 
     def verify(self):
-        if query.add_verification_data(self.email,
-                                       self.vorstellungs_id,
-                                       self.anzahl_personen):
-            return
+        # Todo verify (Daten erstmal in anderem Table speichern um email zu bestätigen)
+        return
 
     def save(self) -> bool:
 

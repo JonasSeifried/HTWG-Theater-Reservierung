@@ -1,11 +1,11 @@
 from wtforms import Form, BooleanField, StringField, SelectField, validators
 
-from flaskr.database import query
+from flaskr.database import db
 
 
 def get_vorstellungen():
     vorstellungen = []
-    for item in query.get_vorstellungen():
+    for item in db.query("Vorstellungen"):
         vorstellungen.append((item["id"], item["name"] + " " + item["datum"] + " " + item["uhrzeit"]))
     return vorstellungen
 
