@@ -3,6 +3,7 @@ from datetime import datetime
 from flask import Blueprint, render_template, request, redirect, url_for
 from .database import db
 from .forms.admin.ReservierungsForm import ReservierungsForm
+from mailing.mail import
 
 bp = Blueprint("reservierung", __name__)
 
@@ -15,6 +16,7 @@ def reservieren():
         if form.validate():
             reservierung = Reservierung(form.email.data, form.vorstellung.data, form.anzahl_personen.data)
             if reservierung.start_verification():
+
                 # Todo Email schicken mit /verify?email=email&vorstellung=vorstellung&personen=anzahl_personen
                 return "worked email should be send now"
             return "Something didnt work"

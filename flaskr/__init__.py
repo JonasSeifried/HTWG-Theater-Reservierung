@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, request, render_template
 
+#env FLASK_APP=flaskr/__init__.py python3 -m flask run
 
 def create_app(test_config=None):
     # create and configure the app

@@ -5,3 +5,4 @@ certifi~=2021.10.8
 python-dotenv~=0.21.0
 pymongo~=4.3.3
 setuptools~=63.2.0
+qrcode~=7.3.1
