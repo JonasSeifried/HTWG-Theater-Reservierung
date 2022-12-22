@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Blueprint, render_template, request, redirect, url_for
 from .database import db
 from .forms.admin.ReservierungsForm import ReservierungsForm
-from mailing.mail import
+from mailing.mail import SendVerify, SendQR
 
 bp = Blueprint("reservierung", __name__)
 
