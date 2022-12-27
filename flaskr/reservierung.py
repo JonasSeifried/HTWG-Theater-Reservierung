@@ -1,9 +1,8 @@
 from datetime import datetime
-
 from flask import Blueprint, render_template, request, redirect, url_for
 from .database import db
+from .mailing import mail
 from .forms.admin.ReservierungsForm import ReservierungsForm
-from mailing.mail import SendVerify, SendQR
 
 bp = Blueprint("reservierung", __name__)
 
@@ -16,7 +15,7 @@ def reservieren():
         if form.validate():
             reservierung = Reservierung(form.email.data, form.vorstellung.data, form.anzahl_personen.data)
             if reservierung.start_verification():
-
+                mail.send_verify(reservierung.email, reservierung.get_url())
                 # Todo Email schicken mit /verify?email=email&vorstellung=vorstellung&personen=anzahl_personen
                 return "worked email should be send now"
             return "Something didnt work"
@@ -38,6 +37,7 @@ def reservierung_verify():
     if not reservierung.verify():
         return "Etwas ist schiefgelaufen, vielleicht ist dein Bestätigungslink abgelaufen!"
 
+    # mail.send_Qrcode()
     return f"email: {email}, vorstellung: {vorstellung}, personen: {anzahl_personen}"
 
 
@@ -57,6 +57,9 @@ class Reservierung:
         if db.insert_one("Verifizierungen", item):
             return True
         return False
+
+    def get_url(self):
+        return f"http://127.0.0.1:5000/verify?email={self.email}&vorstellung={self.vorstellungs_id}&personen={self.anzahl_personen} "
 
     def verify(self) -> bool:
         res_data = db.query("Verifizierungen", self.to_dict())
